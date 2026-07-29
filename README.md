@@ -4,7 +4,7 @@ A full-stack web application that automates day-to-day accounting and bookkeepin
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Frontend**: Next.js 16, TypeScript, Tailwind CSS
 - **Backend**: Python 3.12+, FastAPI, SQLAlchemy 2.x, Alembic
 - **Database**: PostgreSQL
 - **AI Agent**: OpenAI Agents SDK (with Gemini via OpenAI-compatible API)
@@ -49,8 +49,8 @@ uv run uvicorn app.main:app --reload
 **Frontend:**
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 **Database:**
