@@ -55,13 +55,17 @@ async def chat(
         ai_response = "I'm currently experiencing high demand and need a moment to recharge. Please try again in a minute or two."
         tool_calls = None
         actions = []
+    except Exception:
+        ai_response = "I encountered an issue processing your request. Please try again."
+        tool_calls = None
+        actions = []
 
     assistant_msg = AIMessage(
         conversation_id=conversation_id,
         role="assistant",
         content=ai_response,
-        tool_calls=result.get("tool_calls"),
-        tool_results=result.get("tool_results"),
+        tool_calls=tool_calls,
+        tool_results=tool_calls,
     )
     db.add(assistant_msg)
 
