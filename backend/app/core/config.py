@@ -1,3 +1,4 @@
+from pathlib import Path
 from urllib.parse import urlencode, urlparse, urlunparse, parse_qs
 
 from pydantic_settings import BaseSettings
@@ -12,7 +13,8 @@ class Settings(BaseSettings):
     gemini_base_url: str = "https://generativelanguage.googleapis.com/v1beta/openai"
 
     class Config:
-        env_file = ".env"
+        env_file = str(Path(__file__).resolve().parent.parent.parent.parent / ".env")
+        extra = "ignore"
 
     @property
     def async_database_url(self) -> str:
@@ -22,6 +24,17 @@ class Settings(BaseSettings):
         parsed = urlparse(url)
         parsed = parsed._replace(query="")
         return urlunparse(parsed)
+
+    @property
+    def db_connect_args(self) -> dict:
+        args = {"statement_cache_size": 0}
+        parsed = urlparse(self.database_url)
+        qs = parse_qs(parsed.query)
+        sslmode = qs.get("sslmode", [None])[0]
+        if sslmode:
+            import ssl
+            args["ssl"] = sslmode
+        return args
 
 
 settings = Settings()

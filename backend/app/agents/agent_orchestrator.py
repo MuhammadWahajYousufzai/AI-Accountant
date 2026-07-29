@@ -115,7 +115,14 @@ async def process_message(
     for item in result.new_items:
         if item.type == "tool_call_item":
             tool_name = item.tool_name or "unknown"
-            args = item.raw_item.arguments if hasattr(item.raw_item, "arguments") else {}
+            raw_args = item.raw_item.arguments if hasattr(item.raw_item, "arguments") else "{}"
+            if isinstance(raw_args, str):
+                try:
+                    args = json.loads(raw_args)
+                except json.JSONDecodeError:
+                    args = {}
+            else:
+                args = raw_args
             tool_calls_info.append({
                 "tool": tool_name,
                 "args": args,
