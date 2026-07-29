@@ -49,6 +49,7 @@ ROUTING RULES:
 IMPORTANT: Be proactive, not passive. If the user gives partial info (e.g., "I earned £100 for work today"), hand off to Income Agent — they have the tools to handle it. Never ask unnecessary clarifying questions when you can route to a specialist who can figure it out.
 """,
         handoffs=[expense_agent, income_agent, report_agent, audit_agent, query_agent],
+        parallel_tool_calls=False,
     )
 
 
@@ -79,6 +80,7 @@ WHEN LISTING/SEARCHING:
 TONE: Friendly, proactive, helpful. Use £ format (divide cents by 100).
 """,
         tools=tools,
+        parallel_tool_calls=False,
     )
 
 
@@ -110,6 +112,7 @@ WHEN LISTING/SEARCHING:
 TONE: Friendly, proactive, helpful. Use £ format (divide cents by 100).
 """,
         tools=tools,
+        parallel_tool_calls=False,
     )
 
 
@@ -134,6 +137,7 @@ WHEN GENERATING REPORTS:
 TONE: Clear, professional, informative.
 """,
         tools=tools,
+        parallel_tool_calls=False,
     )
 
 
@@ -151,6 +155,7 @@ Always include this disclaimer: "This is an AI-assisted audit and does not repla
 Present findings clearly, categorized by severity (high/medium/low).
 """,
         tools=tools,
+        parallel_tool_calls=False,
     )
 
 
@@ -180,6 +185,7 @@ WHEN ANSWERING:
 TONE: Warm, helpful, can-do attitude. Always try to help rather than asking more questions.
 """,
         tools=tools,
+        parallel_tool_calls=False,
     )
 
 

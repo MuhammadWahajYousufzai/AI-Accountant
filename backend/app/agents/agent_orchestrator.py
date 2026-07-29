@@ -105,6 +105,7 @@ async def process_message(
         triage_agent,
         input=message,
         context=context,
+        max_turns=30,
         run_config=run_config,
     )
 

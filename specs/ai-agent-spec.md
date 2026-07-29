@@ -71,6 +71,7 @@ instructions: |
 
   Never refuse to handoff. Always route to the most specific agent.
 handoffs: [expense_agent, income_agent, report_agent, audit_agent, query_agent]
+parallel_tool_calls: false
 ```
 
 ### 3.2 Expense Agent
@@ -90,6 +91,7 @@ instructions: |
   
   Always use real data from the database via tools. Never fabricate numbers.
 tools: [create_expense, list_expenses, get_expense, update_expense, delete_expense]
+parallel_tool_calls: false
 ```
 
 ### 3.3 Income Agent
@@ -105,6 +107,7 @@ instructions: |
   
   CRUD operations follow same pattern as Expense Agent.
 tools: [create_income, list_income, get_income, update_income, delete_income]
+parallel_tool_calls: false
 ```
 
 ### 3.4 Report Agent
@@ -120,6 +123,7 @@ instructions: |
   Report calculations are done by the backend. You present the results clearly.
   Always specify the reporting period and data source in your response.
 tools: [generate_profit_loss, generate_balance_sheet, get_financial_summary]
+parallel_tool_calls: false
 ```
 
 ### 3.5 Audit Agent
@@ -140,6 +144,7 @@ instructions: |
   - Categorization issues
   - Date inconsistencies
 tools: [run_monthly_audit, analyse_spending]
+parallel_tool_calls: false
 ```
 
 ### 3.6 Query Agent
@@ -155,6 +160,7 @@ instructions: |
   If data is missing to answer a question accurately, state that clearly.
   Explain financial results in simple, clear language.
 tools: [search_transactions, list_expenses, list_income, get_financial_summary, analyse_spending]
+parallel_tool_calls: false
 ```
 
 ## 4. Tool Definitions
