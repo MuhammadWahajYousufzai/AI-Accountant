@@ -1,3 +1,5 @@
+import json
+
 from agents import Runner
 
 from app.agents.agent_factory import (
@@ -98,18 +100,19 @@ async def process_message(
     tool_calls_info = []
     actions = []
 
-    for item in result.new_messages:
-        if hasattr(item, "tool_calls") and item.tool_calls:
-            for tc in item.tool_calls:
-                tool_calls_info.append({
-                    "tool": tc.name,
-                    "args": tc.args,
-                })
-                actions.append({
-                    "type": tc.name,
-                    "status": "success",
-                    "details": tc.args,
-                })
+    for item in result.new_items:
+        if item.type == "tool_call_item":
+            tool_name = item.tool_name or "unknown"
+            args = item.raw_item.arguments if hasattr(item.raw_item, "arguments") else {}
+            tool_calls_info.append({
+                "tool": tool_name,
+                "args": args,
+            })
+            actions.append({
+                "type": tool_name,
+                "status": "success",
+                "details": args,
+            })
 
     return {
         "response": result.final_output,

@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 
 from app.core.config import settings
 from app.core.database import engine, Base
@@ -15,6 +16,21 @@ from app.api.v1 import (
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        try:
+            await conn.execute(text(
+                "ALTER TABLE transactions ALTER COLUMN date TYPE VARCHAR(10) USING date::text"
+            ))
+        except Exception:
+            pass
+        try:
+            await conn.execute(text(
+                "ALTER TABLE audit_runs ALTER COLUMN period_start TYPE VARCHAR(10) USING period_start::text"
+            ))
+            await conn.execute(text(
+                "ALTER TABLE audit_runs ALTER COLUMN period_end TYPE VARCHAR(10) USING period_end::text"
+            ))
+        except Exception:
+            pass
     yield
     await engine.dispose()
 
@@ -25,9 +41,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://frontend:3000"],
+    allow_origins=origins if "*" not in origins else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

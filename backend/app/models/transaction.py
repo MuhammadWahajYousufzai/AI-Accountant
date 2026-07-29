@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import String, Integer, Boolean, Date, DateTime, ForeignKey, Text
+from sqlalchemy import String, Integer, Boolean, DateTime, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -17,7 +17,7 @@ class Transaction(Base):
     currency: Mapped[str] = mapped_column(String(3), default="GBP")
     description: Mapped[str] = mapped_column(Text, nullable=False)
     vendor_source: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    date: Mapped[datetime] = mapped_column(Date, nullable=False, index=True)
+    date: Mapped[str] = mapped_column(String(10), nullable=False, index=True)
     category_id: Mapped[str | None] = mapped_column(String, ForeignKey("categories.id"), nullable=True)
     account_id: Mapped[str | None] = mapped_column(String, ForeignKey("accounts.id"), nullable=True)
     is_reconciled: Mapped[bool] = mapped_column(Boolean, default=False)
