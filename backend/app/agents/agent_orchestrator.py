@@ -19,7 +19,7 @@ from app.tools.expense_tools import (
     update_expense_tool,
     delete_expense_tool,
 )
-from app.tools.income_tools import create_income_tool, list_income_tool
+from app.tools.income_tools import create_income_tool, list_income_tool, delete_income_tool
 from app.tools.report_tools import (
     generate_profit_loss_tool,
     generate_balance_sheet_tool,
@@ -27,10 +27,15 @@ from app.tools.report_tools import (
 )
 from app.tools.audit_tools import run_monthly_audit_tool, analyse_spending_tool
 from app.tools.transaction_tools import search_transactions_tool
+from app.tools.utility_tools import (
+    get_all_categories_tool,
+    get_all_accounts_tool,
+    get_total_income_tool,
+    get_total_expense_tool,
+)
 
 
 def _build_agents(get_db, get_user_id):
-    """Create fresh agents for each request with proper db/user context captured in tool closures."""
     expense_tools = [
         create_expense_tool(get_db, get_user_id),
         list_expenses_tool(get_db, get_user_id),
@@ -41,6 +46,8 @@ def _build_agents(get_db, get_user_id):
     income_tools = [
         create_income_tool(get_db, get_user_id),
         list_income_tool(get_db, get_user_id),
+        delete_income_tool(get_db, get_user_id),
+        get_total_income_tool(get_db, get_user_id),
     ]
     report_tools = [
         generate_profit_loss_tool(get_db, get_user_id),
@@ -57,6 +64,10 @@ def _build_agents(get_db, get_user_id):
         list_income_tool(get_db, get_user_id),
         get_financial_summary_tool(get_db, get_user_id),
         analyse_spending_tool(get_db, get_user_id),
+        get_all_categories_tool(get_db, get_user_id),
+        get_all_accounts_tool(get_db, get_user_id),
+        get_total_income_tool(get_db, get_user_id),
+        get_total_expense_tool(get_db, get_user_id),
     ]
 
     return {

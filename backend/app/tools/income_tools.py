@@ -13,7 +13,7 @@ def create_income_tool(get_db, get_user_id):
         source: str | None = None,
         account_name: str | None = None,
     ) -> str:
-        """Create a new income transaction. Amount is in cents (e.g., £1000 = 100000 pence)."""
+        """Create a new income transaction. Amount is in cents (e.g., £1000 = 100000 pence). If source is not provided, it will be set to 'General'. Category will be auto-created if it doesn't exist."""
         from app.services.income_service import create_income as svc_create
 
         async with get_db() as db:
@@ -42,9 +42,9 @@ def list_income_tool(get_db, get_user_id):
         date_to: str | None = None,
         search: str | None = None,
         page: int = 1,
-        per_page: int = 10,
+        per_page: int = 50,
     ) -> str:
-        """List income records with optional filters."""
+        """List income records with optional filters. Use this to get all income or filter by category/date range/source."""
         from app.services.income_service import list_income as svc_list
 
         filters = {}
@@ -76,3 +76,16 @@ def list_income_tool(get_db, get_user_id):
             return json.dumps(result)
 
     return list_income
+
+
+def delete_income_tool(get_db, get_user_id):
+    @function_tool
+    async def delete_income(income_id: str) -> str:
+        """Delete an income record by its ID. Only call this after the user explicitly confirms deletion."""
+        from app.services.income_service import delete_income as svc_delete
+
+        async with get_db() as db:
+            success = await svc_delete(db, get_user_id(), income_id)
+            return json.dumps({"success": success, "deleted": success})
+
+    return delete_income

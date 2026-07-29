@@ -31,8 +31,8 @@ def generate_balance_sheet_tool(get_db, get_user_id):
 
 def get_financial_summary_tool(get_db, get_user_id):
     @function_tool
-    async def get_financial_summary(date_from: str | None = None, date_to: str | None = None) -> str:
-        """Get an aggregate financial summary. Optionally filter by date range."""
+    async def get_financial_summary() -> str:
+        """Get a complete financial summary: total income, total expenses, net profit, cash position, and category breakdown for the current period."""
         from app.services.report_service import get_dashboard_summary
 
         async with get_db() as db:
@@ -42,6 +42,8 @@ def get_financial_summary_tool(get_db, get_user_id):
                 "total_expense_cents": summary["total_expense_cents"],
                 "net_cents": summary["net_profit_cents"],
                 "cash_position_cents": summary["cash_position_cents"],
+                "category_breakdown": summary.get("category_breakdown", []),
+                "recent_transactions": summary.get("recent_transactions", []),
             })
 
     return get_financial_summary

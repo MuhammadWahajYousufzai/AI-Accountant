@@ -34,6 +34,9 @@ async def create_income(
         bank = await acc_repo.get_by_name(user_id, "Bank Account")
         if bank:
             account_id = bank.id
+        else:
+            bank = await acc_repo.create(user_id, "Bank Account", "checking", is_system=True)
+            account_id = bank.id
 
     income_repo = IncomeRepository(db)
     txn = await income_repo.create(

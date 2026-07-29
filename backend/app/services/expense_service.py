@@ -34,6 +34,9 @@ async def create_expense(
         cash = await acc_repo.get_by_name(user_id, "Cash")
         if cash:
             account_id = cash.id
+        else:
+            cash = await acc_repo.create(user_id, "Cash", "cash", is_system=True)
+            account_id = cash.id
 
     expense_repo = ExpenseRepository(db)
     txn = await expense_repo.create(

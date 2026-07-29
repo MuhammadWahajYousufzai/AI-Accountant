@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from openai import RateLimitError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
@@ -40,17 +41,25 @@ async def chat(
     db.add(user_msg)
     await db.flush()
 
-    result = await process_message(
-        user_id=user_id,
-        conversation_id=conversation_id,
-        message=req.message,
-        db_factory=lambda: async_session(),
-    )
+    try:
+        result = await process_message(
+            user_id=user_id,
+            conversation_id=conversation_id,
+            message=req.message,
+            db_factory=lambda: async_session(),
+        )
+        ai_response = result["response"]
+        tool_calls = result.get("tool_calls")
+        actions = result.get("actions", [])
+    except RateLimitError:
+        ai_response = "I'm currently experiencing high demand and need a moment to recharge. Please try again in a minute or two."
+        tool_calls = None
+        actions = []
 
     assistant_msg = AIMessage(
         conversation_id=conversation_id,
         role="assistant",
-        content=result["response"],
+        content=ai_response,
         tool_calls=result.get("tool_calls"),
         tool_results=result.get("tool_results"),
     )
@@ -64,8 +73,8 @@ async def chat(
 
     return ChatResponse(
         conversation_id=conversation_id,
-        response=result["response"],
-        actions=result.get("actions", []),
+        response=ai_response,
+        actions=actions,
     )
 
 

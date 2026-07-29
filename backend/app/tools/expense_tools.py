@@ -13,7 +13,7 @@ def create_expense_tool(get_db, get_user_id):
         vendor: str | None = None,
         account_name: str | None = None,
     ) -> str:
-        """Create a new expense transaction. Amount is in cents (e.g., £50 = 5000 pence)."""
+        """Create a new expense transaction. Amount is in cents (1 pound = 100 pence). If vendor is not provided, it will be set to 'General'."""
         from app.services.expense_service import create_expense as svc_create
 
         async with get_db() as db:
@@ -42,9 +42,9 @@ def list_expenses_tool(get_db, get_user_id):
         date_to: str | None = None,
         search: str | None = None,
         page: int = 1,
-        per_page: int = 10,
+        per_page: int = 50,
     ) -> str:
-        """List expenses with optional filters. Returns paginated results."""
+        """List expenses with optional filters. Use this to get all expenses or filter by category/date range."""
         from app.services.expense_service import list_expenses as svc_list
 
         filters = {}

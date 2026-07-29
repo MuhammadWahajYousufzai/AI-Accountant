@@ -10,9 +10,9 @@ def search_transactions_tool(get_db, get_user_id):
         date_from: str | None = None,
         date_to: str | None = None,
         type: str | None = None,
-        limit: int = 10,
+        limit: int = 20,
     ) -> str:
-        """Search across all transactions. Query searches in description and vendor/source fields."""
+        """Search across all transactions by description or vendor/source. Optionally filter by date range and type (expense/income)."""
         from app.repositories.transaction_repo import TransactionRepository
 
         filters = {}
